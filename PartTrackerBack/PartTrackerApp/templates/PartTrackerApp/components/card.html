@@ -1,0 +1,10 @@
+
+<a href="{% url 'Filters' %}">
+  <div class="card">
+      <div class="left">
+          {% block card_content %} 
+            <p>card content to be overriden</p>
+          {% endblock card_content %}
+      </div>
+  </div>
+</a>

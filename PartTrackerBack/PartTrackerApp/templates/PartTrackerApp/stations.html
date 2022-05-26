@@ -1,0 +1,25 @@
+{% extends 'PartTrackerApp/base/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<div id="content-left">
+  <ul>
+    <li><a href="{% url 'Filters' %}"><button><p>Filter overview/add page</p></button></a></li>
+    <li><a href="{% url 'Stations' %}"><button><p>Stations:</p></button></a></li>
+    <ul>
+      <a href="{% url 'Stations/Stamp' %}"><li><button><p>Stamp page</p></button></li></a>
+      <a href="{% url 'Stations/Check' %}"><li><button><p>Check page</p></button></li></a>
+      <a href="{% url 'Stations/Spray' %}"><li><button><p>Spray page</p></button></li></a>
+      <a href="{% url 'Stations/Oil' %}"><li><button><p>Oil page</p></button></li></a>
+      <a href="{% url 'Stations/Bag' %}"><li><button><p>Bag page</p></button></li></a>
+    </ul>
+  </ul>
+</div>
+
+<div id="content-right">
+
+</div>
+
+{% endblock content %}

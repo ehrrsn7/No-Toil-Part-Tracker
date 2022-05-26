@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}} | Task Tracker</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'PartTrackerApp/styles.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'PartTrackerApp/favicon.ico' %}"/>
+</head>
+
+<body>
+
+{% include 'PartTrackerApp/base/sidebar.html' %}
+<div id="not-sidebar">
+{% include 'PartTrackerApp/base/header.html' %}
+  <main>
+    {% block content %} 
+    
+    {% endblock content %} 
+  </main>
+{% include 'PartTrackerApp/base/footer.html' %}
+</div>
+</body>
+
+</html>

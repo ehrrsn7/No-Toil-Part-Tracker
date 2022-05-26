@@ -1,0 +1,210 @@
+{% extends 'PartTrackerApp/base/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<script src="{% static 'PartTrackerApp/script.js' %}"></script>
+
+<div id="content-left">
+    <table id="parts-list" width="100%">
+        <thead>
+            <tr>
+                <td class="part-name-column">Part Name</td>
+                <td>Quantity</td>
+                <td>Date Modified</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="dummy-first-row">
+                <td><em>{part name example}</em></td>
+                <td><em>{# of parts}</em></td>
+                <td><em>{date}</em></td>
+                <td><em>{status}</em></td>
+            </tr>
+
+            <!-- populate with data from database -->
+
+            <!-- some tests... -->
+            test |first and |last with lists<br>
+            {{parts_list_range|first}}
+            {{parts_list_range|last}}
+            <br>
+            <br>
+
+            test template vars using with<br>
+            {% with s='slice:"0:20"' %}
+            {{s}}
+            {% endwith %}
+            <br>
+            <br>
+
+            test for loop with slice<br>
+            {% for row in filters|slice:"0:20" %}
+              {{ forloop.counter }}{{row}}<br>
+            {% endfor %}
+            <br>
+            <br>
+
+            test for loop with variable <br>
+            {% with s='slice:"0:20"' %}
+            {% for row in filters|slice:s %}
+              {{ forloop.counter }}{{row}}<br>
+            {% endfor %}
+            {% endwith %}
+            <br>
+            <br>
+
+            <!-- final: -->
+            {% for row in filters|slice:"{{parts_list_range|first}}:{{parts_list_range|last}}" %} <!-- show only first 20 entries -->
+            
+            <tr id="parts-list-row-{{forloop.counter}}">
+              <td>{{row.filter_name}}</td>
+              <td>{{row.quantity}}</td>
+              <td>{{row.date_modified}}</td>
+              <td>{{row.status}}</td>
+            </tr>
+            
+            {% endfor %}
+            <br>
+            <br>
+
+            <!-- todo: change 'entries' to something real once infrastructure is in place -->
+            {% if entries == 0 %} 
+            <tr>
+                <td> <em class="lighter">No entries</em> </td>
+                <td></td> <td></td> <td></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <p style="padding: 1em;"><em>length of parts list: {{ filters|length }}</em></p>
+
+    {% for range in parts_list_ranges %}
+
+    <form action="{% url 'show_new_parts_list_range' %}" style="display: inline">
+      <input type="number" name="parts_list_range_lower" value="{{range|first}}" style="display: none">
+      <input type="number" name="parts_list_range_upper" value="{{range|last}}" style="display: none">
+      <input type="submit" value="Display {{range|first}}-{{range|last}}">
+    </form>
+
+    {% endfor %}
+
+    <br><br><button id="new-request-button">
+        <h1>New Request</h1>
+    </button> 
+    <br><br>   
+
+    <script>
+        document.getElementById("new-request-button").onclick = function(e) {
+            console.log("new request button/hide new request form button clicked")
+
+            let oldButtonText = "<h1>New Request</h1>"
+            let newButtonText = "<h2>Hide New Request Form...</h2>"
+            let btn = document.getElementById("new-request-button")
+            let el = document.getElementById("new-entries-form")
+
+            if (btn.innerHTML === newButtonText) {
+                // try new button text first so that we don't have weird 
+                // toggle delay right off the bat if button text doesn't 
+                // *exactly* match the oldButtonText var
+                console.log("hide new entries form/change button text")
+                btn.innerHTML = oldButtonText
+                el.style.display = "none"
+            } else {
+                console.log("display new entries form/change button text")
+                btn.innerHTML = newButtonText
+                el.style.display = "block"
+            }
+        }
+    </script>
+    
+    <form id="new-entries-form">
+    
+        <table id="new-entries-table" width="100%">
+            <thead>
+                <tr>
+                    <td class="part-name-column">Part Name</td>
+                    <td>Quantity</td>
+                    <td>Status</td>
+                    <td>Oil?</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><em>{part name example}</em></td>
+                    <td><em>{# of parts}</em></td>
+                    <td><em>{status}</em></td>
+                    <td><em>{t/f}</em></td>
+                </tr>
+        
+                <!-- todo: populate with more entries when 'Show more' button is clicked -->
+        
+                {% for i in empty_rows_count %}
+                <tr> 
+                    <td>
+                        <input list="filters-datalist">
+                        <datalist id="filters-datalist">
+                            <option value="3117"></option>
+                            <option value="320-20"></option>
+                            <option value="3220"></option>
+                            <option value="320-21"></option>
+                            <option value="3221"></option>
+                        </datalist>
+                    </td>
+                    <td><input type="number" name="quantity" placeholder="0"></td>
+                    <td>
+                        <input list="status-datalist" placeholder="Stamp">
+                        <datalist id="status-datalist">
+                            <option value="Stamp"></option>
+                            <option value="Check"></option>
+                            <option value="Spray"></option>
+                            <option value="Oil"></option>
+                            <option value="Bag"></option>
+                        </datalist>
+                    </td>
+                    <td>
+                        <label class="switch" style="display: inline-block;">
+                            <input type="checkbox" style="display: inline-block;">
+                        </label>
+                    </td>
+                </tr> 
+                
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <input type="submit" value="Add">
+    
+    </form>
+
+</div>
+
+<div id="content-right">
+    {% include 'PartTrackerApp/components/part-preview.html' %}
+    {% block part_name      %}  {% endblock part_name %}
+    {% block quantity       %}  {% endblock quantity %}
+    {% block date_modified  %}  {% endblock date_modified %}
+    {% block due_date       %}  {% endblock due_date %}
+    {% block status         %}  {% endblock status %}
+    {% block oil            %}  {% endblock oil %}
+
+</div>
+
+{% endblock content %}
+
+<!-- the following is an example of taking a database query 
+    object from the mysql query and adding some more -->
+
+<!-- 
+<form action="{% url 'add' %}">
+  Item ID: <input type="text" name="item_id"><br>
+  Description: <input type="text" name="description"><br>
+  Value: <input type="text" name="value"><br>
+  Hazardous: <input type="radio" name="hazardous" value="Yes">Yes
+  <input type="radio" name="hazardous" value="No" checked>No<br>
+  <input type="submit" value="Add">
+</form> -->

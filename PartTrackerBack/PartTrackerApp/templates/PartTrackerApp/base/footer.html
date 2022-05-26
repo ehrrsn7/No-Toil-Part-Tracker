@@ -1,0 +1,49 @@
+{% load static %}
+<!-- footer -->
+<footer>
+
+  <div id="mobile-links" style="none">
+    <h3>Site Pages:</h3>
+    <!-- should the sidebar not be visible, provide some nav links for mobile users -->
+    <ul>
+      <li><a href="{% url 'Filters' %}"><button><p>Filter overview/add page</p></button></a></li>
+      <li><a href="{% url 'Stations' %}"><button><p>Stations:</p></button></a></li>
+      <ul>
+        <a href="{% url 'Stations/Stamp' %}"><li><button><p>Stamp page</p></button></li></a>
+        <a href="{% url 'Stations/Check' %}"><li><button><p>Check page</p></button></li></a>
+        <a href="{% url 'Stations/Spray' %}"><li><button><p>Spray page</p></button></li></a>
+        <a href="{% url 'Stations/Oil' %}"><li><button><p>Oil page</p></button></li></a>
+        <a href="{% url 'Stations/Bag' %}"><li><button><p>Bag page</p></button></li></a>
+      </ul>
+    </ul>
+  </div>
+  <div>
+    <!-- note: the order of things is important 
+      (note that top->bottom here is right->left on the page)-->
+    <a href="https://notoil.com" class="float-right" target="_blank">
+      <img src="{% static 'PartTrackerApp/site-icons/social/notoil.png' %}" width="50px" alt="no toil icon" />
+    </a>
+    
+    <a href="https://www.instagram.com/no_toil/" class="float-right" target="_blank">
+      <img src="{% static 'PartTrackerApp/site-icons/social/instagram.png' %}" width="50px" alt="instagram icon" />
+    </a>
+    
+    <a href="https://www.facebook.com/NoToil/" class="float-right" target="_blank">
+      <img src="{% static 'PartTrackerApp/site-icons/social/facebook.png' %}" width="50px" alt="facebook icon" />
+    </a>
+    
+    <a href="https://www.amazon.com/No-Toil/s?k=No-Toil" class="float-right" target="_blank">
+      <img src="{% static 'PartTrackerApp/site-icons/social/amazon.png' %}" width="50px" alt="amazon icon" />
+    </a>
+
+    <a href="https://github.com/ehrrsn7/" target="_blank" class="float-right" style="padding-right: 5em;">
+      <p>&copy ehrrsn7 2022 &nbsp; <em>Parts Tracker</em> &nbsp; Created by Elijah Harrison</p>
+    </a>
+    
+    <a href="{% url 'Todo' %}" class="float-left"><p>To do</p></a><br>
+    <a href="{% url 'SiteMap' %}" class="float-left"><p>Style Guide</p></a><br>
+
+  </div>
+</footer>
+
+</html>

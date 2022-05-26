@@ -1,0 +1,27 @@
+{% extends 'PartTrackerApp/base/base.html' %}
+
+{% block content %}
+
+<div class="left">
+
+  <h1>To do:</h1>
+  <ul>
+    <li>on mobile, the sidebar doesn't exist to navigate the different pages. </li>
+    <li>Change the submit button to match the correct styling. Then, update the 'add' view that the `form` tag's django-dynamic action calls. </li>
+    <li>Maybe we can move the 'mark as completed' and the 'mark quantity as completed' buttons to a row that appears underneath the part row to save space/remove clutter. (experiment with having normal/different tags <em>between</em> the tr tags -- see the 'read between the lines' paragraph to see the basic idea)</li>
+    <li>All the dynamic stuff:</li>
+    <li>— finish the database so that I can start making select queries to view the task list's contents. </li>
+    <li>— get the notification screen looking and behaving the way I designed it to. Also, the notification icon seems to wrap in an ugly way after hitting the page title, so fix that.  </li>
+    <li>— do something similar to that with the task preview box...or actually: do some accordion-style animation so that it drops down right underneath the selected row. —— the html written will still need to go to some sort of template... it's gonna be a chonky boi with all the different {% block part_name %} {% endblock part_name %} blocks for <em>every</em> component of the little view, but it's definitely gonna make things more efficient. I've created a file called task-preview.html in the PartTrackerApp/templates/components directory and changed the main page's code to simply call from that file. </li>
+    <li>— fix the weird cell spacing on the new request input table.  </li>
+    <li>Change the sidebar so that it's not wide...at least for this site. It just doesn't work with the current design. </li>
+    <li>The grid spacing applies to literally everything in 'main'. I'd like for the 'new request' div to be outside of that... </li>
+  </ul>
+
+  <p>Attributions:</p>
+  <a target="_blank" href="https://icons8.com/icon/ZRVMY0SUfdBx/bell">Bell</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+</div>
+
+<div class="right"></div>
+
+{% endblock content %}

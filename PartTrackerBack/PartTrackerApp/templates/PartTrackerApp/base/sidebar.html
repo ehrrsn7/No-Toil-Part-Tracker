@@ -1,0 +1,71 @@
+{% load static %}
+<section id="sidebar">
+
+  <!-- title -->
+  <a href="{% url 'Filters' %}">
+      <section>
+        <img src="{% static 'PartTrackerApp/site-icons/notoil-logo-dark.png' %}" id="logo-image" alt="logo image">
+      </section>
+      <div id="sidebar-title">
+          <h3 id="logo-text">No Toil ind.</h3>
+          <h3 id="subtitle">
+              Parts Tracker
+          </h3>
+      </div>
+  </a>
+
+  <!-- links -->
+  <section id="links-container">
+
+      <a href="{% url 'Filters' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="home icon">
+              <h2> Filters </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Stations </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations/Stamp' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Stamp </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations/Check' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Check </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations/Spray' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Spray </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations/Oil' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Oil </h2>
+          </div>
+      </a>
+
+      <a href="{% url 'Stations/Bag' %}">
+          <div class="link-container">
+              <img src="{% static 'PartTrackerApp/site-icons/home.png' %}" class="icon" alt="stations icon">
+              <h2> Bag </h2>
+          </div>
+      </a>
+
+  </section>
+
+</section>

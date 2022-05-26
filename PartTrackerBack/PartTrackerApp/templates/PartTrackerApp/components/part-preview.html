@@ -1,0 +1,106 @@
+<div id="part-preview-box" style="display: none">
+  <div id="part-preview-box-header">
+      <p class="larger">Part Preview</p><br>
+  </div>
+  <table id="part-preview-table" width="100%">
+      <tbody>
+          <tr> <td> <h1 id="part-name">           </h1> </td> </tr>
+          <tr> <td> <p id="quantity-label">       </p> </td> <td> <p id="quantity">      </p> </td></tr>
+          <tr> <td> <p id="date-modified-label">  </p> </td> <td> <p id="date-modified"> </p> </td></tr>
+          <tr> <td> <p id="status-label">         </p> </td> <td> <p id="status">        </p> </td></tr>
+          <tr> <td> <p id="oil-label">            </p> </td> <td> <p id="oil">           </p> </td></tr>
+      </tbody>
+  </table>
+</div>
+
+<script>
+    function getTodaysDate() {
+        var today = new Date()
+        var dd = String(today.getDate()).padStart(2, '0')
+        var mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+        var yyyy = today.getFullYear()
+
+        today = mm + '/' + dd + '/' + yyyy
+
+        return today
+    }
+
+    function capitalizeString(str) {
+        let strArr = str.split(" ")
+        strArr.forEach((word, i) => { 
+            strArr[i] = strArr[i].charAt(0).toUpperCase() + strArr[i].slice(1) })
+        return strArr.join(" ")
+    }
+
+    function getStatusName(status) {
+        switch(status) {
+            case 0: return "Stamp"
+            case 1: return "Check"
+            case 2: return "Spray"
+            case 3: return "Oil"
+            case 4: return "Bag"
+            default: return "unknown"
+        }
+    }
+
+    function updatePartPreview(part_name="part_name", quantity=0, date_modified="date", status=0, oil=false) {
+        console.log("updating part-preview")
+        document.getElementById("part-preview-box").style.display = "block"
+        
+        document.getElementById("part-name").innerHTML            = part_name
+
+        document.getElementById("quantity").innerHTML             = quantity
+        document.getElementById("date-modified").innerHTML        = date_modified
+        document.getElementById("status").innerHTML               = `${getStatusName(status)} [${status+1}]`
+        document.getElementById("oil").innerHTML                  = (oil) ? "True" : "False"
+
+        document.getElementById("quantity-label").innerHTML       = "Quantity"
+        document.getElementById("date-modified-label").innerHTML  = "Date Modified"
+        document.getElementById("status-label").innerHTML         = "Status"
+        document.getElementById("oil-label").innerHTML            = "Oil"
+    }
+
+    function deselectPartPreview() {
+        // to be called when mouse clicks on none of the part rows in parts-list table
+        console.log("hiding part-preview-box")
+        document.getElementById("part-preview-box").style.display = "none"
+    }
+
+</script>
+
+<script>
+    // row event listeners
+    document.querySelectorAll("table#parts-list tbody tr").forEach((el, i) => {
+        // el all rows in #parts-list table
+        console.log(i, el.id)
+
+        // set event listener for all el (with id of format "parts-list-row-#") on click:
+            // call updatePartPreview(pass vals from this row using django tag filters[i].*) 
+            // where * are the desired values to populate the preview with
+
+        // set event listener for no els above 
+            // call deselectPartPreview
+    })
+</script>
+
+<!-- debug buttons -->
+<!-- <button id="change-part-preview-button-sample">change preview btn</button>
+<button id="hide-part-preview-button-sample">hide preview btn</button> -->
+
+<script>
+    // debug buttons
+    document.getElementById("change-part-preview-button-sample").onclick = function(ev) {
+        console.log(ev)
+        updatePartPreview(
+            part_name="310-17",
+            quantity=200,
+            date_modified=getTodaysDate(),
+            status=0,
+            oil=false
+        )
+    }
+    document.getElementById("hide-part-preview-button-sample").onclick = function(ev) {
+        console.log(ev)
+        deselectPartPreview()
+    }
+</script>
