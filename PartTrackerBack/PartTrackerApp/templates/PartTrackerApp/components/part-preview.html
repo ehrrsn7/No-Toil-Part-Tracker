@@ -1,3 +1,5 @@
+{% load template_functions %}
+
 <div id="part-preview-box" style="display: none">
   <div id="part-preview-box-header">
       <p class="larger">Part Preview</p><br>
@@ -70,11 +72,29 @@
 
 <script>
     // row event listeners
+    let filters = JSON.parse(`{{ filters|js }}`)
+    console.log(filters)
     document.querySelectorAll("table#parts-list tbody tr").forEach((el, i) => {
         // el all rows in #parts-list table
-        console.log(i, el.id)
+        let parts_list_row_number = parseInt(el.id.replace("parts-list-row-", ""))
+        let filter = filters[parts_list_row_number]
+        console.log(filter)
 
         // set event listener for all el (with id of format "parts-list-row-#") on click:
+        if (el.id.includes("parts-list-row-")) {
+            document.getElementById(el.id).onclick = (ev) => {
+                console.log(typeof(parts_list_row_number))
+                
+                console.log(parts_list_row_number)
+                updatePartPreview(
+                    part_name       = filter["filter_name"],
+                    quantity        = filter["quantity"],
+                    date_modified   = filter["date_modified"],
+                    status          = filter["status"],
+                    oil             = filter["oil"]
+                )
+            }
+        }
             // call updatePartPreview(pass vals from this row using django tag filters[i].*) 
             // where * are the desired values to populate the preview with
 

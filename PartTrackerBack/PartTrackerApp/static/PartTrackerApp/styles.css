@@ -120,6 +120,10 @@ tbody tr td {
     text-align: left;
 }
 
+tr.dummy-first-row {
+    min-height: 30px;
+}
+
 @media (prefers-color-scheme: dark) {
     table { background-color: var(--background-color-dark-2); }
 }
@@ -236,8 +240,8 @@ table#part-preview-table tbody tr td:not(:first-child) {
     }
 }
 
-table#part-preview-table td {
-    border-bottom: 1px solid black;
+table#part-preview-table tr {
+    border-bottom: 1px solid var(--secondary-color-dark);
 }
 
 /* new entry table */

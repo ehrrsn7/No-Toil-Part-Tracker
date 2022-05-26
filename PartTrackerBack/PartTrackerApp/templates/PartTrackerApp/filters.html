@@ -29,19 +29,17 @@
 
             {% for row in filters %}
             
-            <tr id="parts-list-row-{{ current_parts_list_range|index:forloop.counter0 }}">
+            <tr id="parts-list-row-{{ forloop.counter0 }}">
               <td>{{row.filter_name}}</td>
               <td>{{row.quantity}}</td>
               <td>{{row.date_modified}}</td>
-              <td>{{row.status}}</td>
+              <td>{{row.status|status_enum}}</td>
             </tr>
             
             {% endfor %}
-            <br>
-            <br>
 
             <!-- todo: change 'entries' to something real once infrastructure is in place -->
-            {% if entries == 0 %} 
+            {% if tasks_length < 1 %} 
             <tr>
                 <td> <em class="lighter">No entries</em> </td>
                 <td></td> <td></td> <td></td>
@@ -50,19 +48,21 @@
         </tbody>
     </table>
 
+    {% if tasks_length > 0 %}
     <p style="padding: 1em;">
-      <em>Displaying {{current_parts_list_range|first}}-{{current_parts_list_range|last}} of {{ tasks_length }}</em>
+        <em>Displaying {{current_parts_list_range|first}}-{{current_parts_list_range|last}} of {{ tasks_length }}</em>
     </p>
+    {% endif %}
 
     {% for range in parts_list_ranges %}
 
-    {% if current_parts_list_range_index == forloop.counter %}
+    {% if current_parts_list_range_index == forloop.counter and tasks_list > 0 %}
 
     <button style="display: inline" class="color1">
       Display {{range|first}}-{{range|last}}
     </button>
 
-    {% else %}
+    {% elif tasks_length > 0 %}
 
     <form action="{% url 'show_new_parts_list_range' %}" style="display: inline">
       <input type="number" name="parts_list_range_lower" value="{{range|first}}" style="display: none">
@@ -115,7 +115,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="dummy-first-row">
                     <td><em>{part name example}</em></td>
                     <td><em>{# of parts}</em></td>
                     <td><em>{status}</em></td>

@@ -19,7 +19,7 @@ urlpatterns = [
     path('Todo',        views.index, name='Todo'),
 
     # home page
-    path('', views.index, name=''),
+    path('', views.stations, name=''),
 
     # actions
     path('add', views.add, name='add'),
