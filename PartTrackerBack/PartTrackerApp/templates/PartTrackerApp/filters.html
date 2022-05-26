@@ -3,6 +3,7 @@
 {% block content %}
 
 {% load static %}
+{% load template_functions %}
 
 <script src="{% static 'PartTrackerApp/script.js' %}"></script>
 
@@ -26,40 +27,9 @@
 
             <!-- populate with data from database -->
 
-            <!-- some tests... -->
-            test |first and |last with lists<br>
-            {{parts_list_range|first}}
-            {{parts_list_range|last}}
-            <br>
-            <br>
-
-            test template vars using with<br>
-            {% with s='slice:"0:20"' %}
-            {{s}}
-            {% endwith %}
-            <br>
-            <br>
-
-            test for loop with slice<br>
-            {% for row in filters|slice:"0:20" %}
-              {{ forloop.counter }}{{row}}<br>
-            {% endfor %}
-            <br>
-            <br>
-
-            test for loop with variable <br>
-            {% with s='slice:"0:20"' %}
-            {% for row in filters|slice:s %}
-              {{ forloop.counter }}{{row}}<br>
-            {% endfor %}
-            {% endwith %}
-            <br>
-            <br>
-
-            <!-- final: -->
-            {% for row in filters|slice:"{{parts_list_range|first}}:{{parts_list_range|last}}" %} <!-- show only first 20 entries -->
+            {% for row in filters %}
             
-            <tr id="parts-list-row-{{forloop.counter}}">
+            <tr id="parts-list-row-{{ current_parts_list_range|index:forloop.counter0 }}">
               <td>{{row.filter_name}}</td>
               <td>{{row.quantity}}</td>
               <td>{{row.date_modified}}</td>
@@ -80,15 +50,27 @@
         </tbody>
     </table>
 
-    <p style="padding: 1em;"><em>length of parts list: {{ filters|length }}</em></p>
+    <p style="padding: 1em;">
+      <em>Displaying {{current_parts_list_range|first}}-{{current_parts_list_range|last}} of {{ tasks_length }}</em>
+    </p>
 
     {% for range in parts_list_ranges %}
+
+    {% if current_parts_list_range_index == forloop.counter %}
+
+    <button style="display: inline" class="color1">
+      Display {{range|first}}-{{range|last}}
+    </button>
+
+    {% else %}
 
     <form action="{% url 'show_new_parts_list_range' %}" style="display: inline">
       <input type="number" name="parts_list_range_lower" value="{{range|first}}" style="display: none">
       <input type="number" name="parts_list_range_upper" value="{{range|last}}" style="display: none">
       <input type="submit" value="Display {{range|first}}-{{range|last}}">
     </form>
+
+    {% endif %}
 
     {% endfor %}
 

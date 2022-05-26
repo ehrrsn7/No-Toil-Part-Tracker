@@ -7,29 +7,45 @@
 #!/bin/sh
 
 # get which os
-unameOut="$(uname -s)"
-echo ${unameOut}
+uname="$(uname -s)"
+echo "uname: "${uname}"\n"
 
-# activate virtual environment ("No-Toil-Part-Tracker")
-# delete this part of the script when running on deployed server
-echo "activating virtual environment..."
-source bin/activate
+# linux / unix(mac):
+if [ "$(uname)" == "Darwin" ] || 
+[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+  # display some info about the current directory
+  echo "current directory:"; pwd;    echo ""
+  echo "directory contents:"; ls -l; echo ""
 
-# # show some info
-# echo "current directory:"
-# pwd
-# echo "directory contents:"
-# ls -l
-# echo "python version and dependencies:"
-# python3 --version
-# pip list
+  # activate virtual environment ("No-Toil-Part-Tracker")
+  echo "activating virtual environment...\n"
+  source bin/activate
+
+# windows
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ] || 
+[ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+  # display some info about the current directory
+  echo "current directory:"; cd;   echo ""
+  echo "directory contents:"; dir; echo ""
+
+  # activate virtual environment ("No-Toil-Part-Tracker")
+  echo "activating virtual environment...\n"
+  bin/activate
+
+fi # end if sequence
+
+# python information
+echo "python version and dependencies:"
+python3 --version
+pip list --format=json # non-verbose..
+echo ""
 
 # # change to server directory to access App and Site in main dir
 # cd PartTrackerBack/
 
-# # get my ip address
-# ip4 = $(ipconfig getifaddr en0)
-# echo "ip4 $ip4"
+# get my ip address
+ip4=$(ipconfig getifaddr en0)
+echo "ip4 $ip4"
 
-# # start django server
-# python3 manage.py runserver "$ip4":8000
+# start django server
+python3 PartTrackerBack/manage.py runserver $(ipconfig getifaddr en0):8000

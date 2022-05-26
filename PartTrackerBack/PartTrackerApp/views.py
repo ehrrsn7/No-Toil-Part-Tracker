@@ -74,7 +74,7 @@ sample_items = [
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
-  { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
+  { "filter_name": "urmom", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
   { "filter_name": "1110", "quantity":50, "date_modified": "5/20/22", "status": status_enum[0].capitalize(), "oil": True },
@@ -105,42 +105,45 @@ def filters(request):
   
   # Read all the items from the database
   tasks = models.Filter_Tasks.objects.all()
+  tasks = sample_items # dummy database redirect
   # print(tasks)
+  tasks_length = len(tasks)
 
-  # clear all rows in Parts_List_Range
-  for item in models.Parts_List_Range.objects.all():
-    item.delete()
+  print(models.Parts_List_Range.objects.all())
 
-  # update Parts_List_Range based on request (if it was made) 
-  # via show_new_parts_list_range view/redirect
-  up  = request.GET.get("parts_list_range_lower")
-  low = request.GET.get("parts_list_range_upper")
-  if (up == None or low == None):
-    models.Parts_List_Range(lower=0, upper=20).save()
+  # get parts list display range and create sliced list based on it
+  if len(models.Parts_List_Range.objects.all()) <= 0: lower, upper = (0, 20)
   else:
-    models.Parts_List_Range(lower=low, upper=up).save()
+    lower = models.Parts_List_Range.objects.first().lower
+    upper = models.Parts_List_Range.objects.first().upper + 1
   
-  # save current range to send to /Filters
-  parts_list_range = list(range(
-    models.Parts_List_Range.objects.first().lower,
-    models.Parts_List_Range.objects.first().upper + 1
-  ))
-  print(parts_list_range)
+  print(tasks[0])
+  print(lower, tasks[lower])
+  print(upper, tasks[upper])
+  tasks = tasks[slice(lower, upper)]
 
   # generate range options to be displayed to user 
   # (dynamically based on number of existing entries)
-  parts_list_ranges = [range(0, 20+1)]
-  for i in range(int(len(sample_items)/20)):
-    parts_list_ranges.append(range(21 + i * 20, 41 + i * 20))
+  parts_list_ranges = [list(range(1, 21))] # init list and set first range
+  for i in range(int(len(sample_items)/20)): # add next ranges in batches of 20
+    l = 21 + i * 20
+    u = 41 + i * 20
+    if i+1 == int(len(sample_items)/20): # last batch ends with last val
+      u = len(sample_items)
+    parts_list_ranges.append(list(range(l, u)))
+  
+  current_parts_list_range_index = int(
+    (models.Parts_List_Range.objects.first().lower+1) / 20)
+  current_parts_list_range = parts_list_ranges[current_parts_list_range_index]
 
   values = {
     "title": "Filters",
-    "filters": sample_items,
+    "filters": tasks,
+    "tasks_length": tasks_length,
     "empty_rows_count":range(20),
     "parts_list_ranges":parts_list_ranges,
-    "parts_list_range":parts_list_range,
-    "parts_list_range_start":parts_list_range[0],
-    "parts_list_range_end":parts_list_range[-1],
+    "current_parts_list_range":current_parts_list_range,
+    "current_parts_list_range_index":current_parts_list_range_index+1,
   }
   return render(request, 'PartTrackerApp/filters.html', values)
 
@@ -218,8 +221,12 @@ def add(request):
 
 # show row _ to row _ of total items in filter_tasks
 def show_new_parts_list_range(request):
-  print(
-    request.GET.get("parts_list_range_lower"),
-    request.GET.get("parts_list_range_upper"),
-  )
+  # update Parts_List_Range based on request (if it was made) 
+  # via show_new_parts_list_range view/redirect
+  for item in models.Parts_List_Range.objects.all(): item.delete()
+  low = request.GET.get("parts_list_range_lower") or 0
+  up  = request.GET.get("parts_list_range_upper") or 20
+  models.Parts_List_Range(lower=int(low)-1, upper=int(up)-1).save()
+  print("\nin request view")
+  print(models.Parts_List_Range.objects.first().lower, models.Parts_List_Range.objects.first().upper)
   return redirect("PartTrackerApp/Filters") # refresh to show changes
